@@ -26,3 +26,9 @@ def estimate_counts():
 
     pp.pprint(freq_est)
 
+def ngrams(doc,n):
+    ngrams = np.zeros(10000)
+    for i in range(n-1, len(contents)):
+        for j in range(n-1, 0, -1):
+            ngrams = np.add(np.roll(table[contents[i-j]], -j), ngrams)
+    return ngrams
