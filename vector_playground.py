@@ -10,6 +10,7 @@ with open("clean.txt") as file:
 
 
 counts = Counter(doc)
+word_counts = Counter(doc.split())
 table = {}
 np.random.seed(76)
 for c in counts:
@@ -34,6 +35,8 @@ def ngrams(n):
         for j in range(n-1, 0, -1):
             ngrams = np.add(np.roll(table[doc[i-j]], -j), ngrams)
     return ngrams
+#ngrams = ngrams(4)
+
 def skip3gram_table():
     skiptable = copy.deepcopy(table)
     skip3grams = np.zeros(10000)
@@ -42,6 +45,8 @@ def skip3gram_table():
         for j in [0, 2]:
             skiptable[c] = np.add(np.roll(table[doc[i-j]], -j), skiptable[c])
     return skiptable
+#l_table = skip3gram_table()
+
 def words(doc):
     words_vec = np.zeros(10000)
     i = 0
@@ -53,3 +58,8 @@ def words(doc):
             i += 1
         words_vec = np.add(np.roll(table[c], i), words_vec)
     return words_vec
+profile = words(doc)
+
+def count_word(word):
+    return (np.dot(profile,words(word))/D, word_counts[word])
+estimate_counts()
