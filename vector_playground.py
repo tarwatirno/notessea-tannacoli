@@ -1,6 +1,6 @@
 # coding: utf-8
 import numpy as np
-from collections import Counter
+from collections import Counter, OrderedDict
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 import copy
@@ -16,17 +16,18 @@ np.random.seed(76)
 for c in counts:
     table[c] = np.random.choice([-1, 1], size=(D,))
 
+def print_frequency_comparison(vec, counter, vector_func):
+    freq_est = OrderedDict()
+    for k,v in counter.most_common(26):
+        est_count = np.dot(vec, vector_func(k))
+        freq_est[k] = (est_count, v)
+
+    pp.pprint(freq_est)
+
 def estimate_counts():
     counts_v = np.zeros(D)
     for c in doc:
         counts_v = np.add(counts_v, table[c])
-
-    freq_est = {}
-    for c in table:
-        est_count = np.dot(counts_v, table[c])
-        freq_est[c] = (est_count, counts[c])
-
-    pp.pprint(freq_est)
     return counts_v
 
 def ngrams(n):
@@ -58,8 +59,11 @@ def words(doc):
             i += 1
         words_vec = np.add(np.roll(table[c], i), words_vec)
     return words_vec
-profile = words(doc)
+#profile = words(doc)
 
 def count_word(word):
     return (np.dot(profile,words(word))/(D*10), word_counts[word])
-estimate_counts()
+
+#characters
+print_frequency_comparison(estimate_counts(), counts, lambda x: table[x])
+print_frequency_comparison(words(doc), word_counts, words)
