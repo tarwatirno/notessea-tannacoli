@@ -8,16 +8,16 @@ import copy
 with open("clean.txt") as file:
     doc = file.read()
 
-
+D=10000
 counts = Counter(doc)
 word_counts = Counter(doc.split())
 table = {}
 np.random.seed(76)
 for c in counts:
-    table[c] = np.random.choice([-1, 1], size=(10000,))
+    table[c] = np.random.choice([-1, 1], size=(D,))
 
 def estimate_counts():
-    counts_v = np.zeros(10000)
+    counts_v = np.zeros(D)
     for c in doc:
         counts_v = np.add(counts_v, table[c])
 
@@ -30,7 +30,7 @@ def estimate_counts():
     return counts_v
 
 def ngrams(n):
-    ngrams = np.zeros(10000)
+    ngrams = np.zeros(D)
     for i in range(n-1, len(doc)):
         for j in range(n-1, 0, -1):
             ngrams = np.add(np.roll(table[doc[i-j]], -j), ngrams)
@@ -39,7 +39,7 @@ def ngrams(n):
 
 def skip3gram_table():
     skiptable = copy.deepcopy(table)
-    skip3grams = np.zeros(10000)
+    skip3grams = np.zeros(D)
     for i in range(2, len(doc)):
         c = doc[i-1]
         for j in [0, 2]:
@@ -48,7 +48,7 @@ def skip3gram_table():
 #l_table = skip3gram_table()
 
 def words(doc):
-    words_vec = np.zeros(10000)
+    words_vec = np.zeros(D)
     i = 0
     for c in doc:
         if c == " ":
@@ -61,5 +61,5 @@ def words(doc):
 profile = words(doc)
 
 def count_word(word):
-    return (np.dot(profile,words(word))/D, word_counts[word])
+    return (np.dot(profile,words(word))/(D*10), word_counts[word])
 estimate_counts()
