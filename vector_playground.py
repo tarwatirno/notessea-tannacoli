@@ -42,3 +42,14 @@ def skip3gram_table():
         for j in [0, 2]:
             skiptable[c] = np.add(np.roll(table[doc[i-j]], -j), skiptable[c])
     return skiptable
+def words(doc):
+    words_vec = np.zeros(10000)
+    i = 0
+    for c in doc:
+        if c == " ":
+            #words_vec = np.add(np.roll(table[cb], i-l), words_vec)
+            i = 0
+        else:
+            i += 1
+        words_vec = np.add(np.roll(table[c], i), words_vec)
+    return words_vec
