@@ -32,5 +32,5 @@ def ngrams(n):
     ngrams = np.zeros(10000)
     for i in range(n-1, len(doc)):
         for j in range(n-1, 0, -1):
-            ngrams = np.add(np.roll(table[doc[i-j], -j]), ngrams)
+            ngrams = np.add(np.roll(table[doc[i-j]], -j), ngrams)
     return ngrams
