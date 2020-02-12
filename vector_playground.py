@@ -1,14 +1,15 @@
 # coding: utf-8
 import numpy as np
 from collections import Counter
+
 import pprint
-
 pp = pprint.PrettyPrinter(indent=4)
+
 with open("clean.txt") as file:
-    contents = file.read()
+    doc = file.read()
 
 
-counts = Counter(contents)
+counts = Counter(doc)
 table = {}
 np.random.seed(76)
 for c in counts:
@@ -16,7 +17,7 @@ for c in counts:
 
 def estimate_counts():
     counts_v = np.zeros(10000)
-    for c in contents:
+    for c in doc:
         counts_v = np.add(counts_v, table[c])
 
     freq_est = {}
@@ -25,10 +26,11 @@ def estimate_counts():
         freq_est[c] = (est_count, counts[c])
 
     pp.pprint(freq_est)
+    return counts_v
 
-def ngrams(doc,n):
+def ngrams(n):
     ngrams = np.zeros(10000)
-    for i in range(n-1, len(contents)):
+    for i in range(n-1, len(doc)):
         for j in range(n-1, 0, -1):
-            ngrams = np.add(np.roll(table[contents[i-j]], -j), ngrams)
+            ngrams = np.add(np.roll(table[doc[i-j], -j]), ngrams)
     return ngrams
